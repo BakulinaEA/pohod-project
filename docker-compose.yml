@@ -1,24 +1,35 @@
-version: '3'
-
+version: '3.9'
 services:
-  mongo_db:
-    container_name: mongo_db
-    image: mongo:6.0.15
-    restart: unless-stopped
+
+  backend:
+    image: backend:1.0.0
+    container_name: ${SERVER_HOST}
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file: .env
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
     volumes:
-      - '.private/mongo_data:/var/lib/mongodb'
-    ports:
-      - 27017:27017
-
-  api:
-    build: ./backend/.
-    ports:
-      - 3000:3000
-    environment:
-      
-
+      - ./backend:/backend
+      - backend-v:/backend
     depends_on:
-      - mongo_db
+      - database
+  
+  database:
+    image: database:1.0.0
+    container_name: ${DATABASE_HOST}
+    build: 
+      context: ./database
+      dockerfile: Dockerfile
+    env_file: .env
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    volumes:
+      - database-v:/data/db
 
 volumes:
-  mongo_db: {}
+  backend-v:
+    name: "backend-v"
+  database-v:
+    name: "database-v"

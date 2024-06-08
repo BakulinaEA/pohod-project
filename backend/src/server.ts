@@ -1,17 +1,18 @@
-import express, { Request, Response } from 'express'
+import mongoose, { Collection, connect } from 'mongoose'
 import http from 'http'
 
-// https://www.youtube.com/watch?v=72_5_YuDCNA
+const MONGO_USERNAME = process.env.MONGO_INITDB_ROOT_USERNAME
+const MONGO_PASSWORD = process.env.MONGO_INITDB_ROOT_PASSWORD
+const MONGO_HOST = process.env.DATABASE_HOST
+const MONGO_PORT = process.env.DATABASE_PORT
+const MONGO_DATABASE_NAME = process.env.MONGO_DATABASE_NAME
 
-// DOCKER
-// https://www.youtube.com/watch?v=vm3YfOHf_Cc
-const app = express()
-const PORT = process.env.PORT || 3000
+const SERVER_HOST = process.env.SERVER_HOST
+const SERVER_PORT = process.env.SERVER_PORT
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('hello world')
-})
+const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}`
 
-app.listen(PORT, () => {
-  console.log(`Running on Port ${PORT}`)
-})
+mongoose
+  .connect(MONGO_URL)
+  .then(() => console.log('MongoDB connected.'))
+  .catch((err) => console.error('Error by connecting to MongoDB:', err))
