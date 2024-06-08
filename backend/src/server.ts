@@ -1,18 +1,16 @@
-import mongoose, { Collection, connect } from 'mongoose'
-import http from 'http'
+import 'dotenv/config'
+import express from 'express'
+import connectToDatabase from './config/db'
+import { SERVER_PORT } from './constants/env'
+const app = express()
 
-const MONGO_USERNAME = process.env.MONGO_INITDB_ROOT_USERNAME
-const MONGO_PASSWORD = process.env.MONGO_INITDB_ROOT_PASSWORD
-const MONGO_HOST = process.env.DATABASE_HOST
-const MONGO_PORT = process.env.DATABASE_PORT
-const MONGO_DATABASE_NAME = process.env.MONGO_DATABASE_NAME
+app.get('/', (req, res) => {
+  return res.status(200).json({
+    status: 'online'
+  })
+})
 
-const SERVER_HOST = process.env.SERVER_HOST
-const SERVER_PORT = process.env.SERVER_PORT
-
-const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}`
-
-mongoose
-  .connect(MONGO_URL)
-  .then(() => console.log('MongoDB connected.'))
-  .catch((err) => console.error('Error by connecting to MongoDB:', err))
+app.listen(SERVER_PORT, async () => {
+  console.log(`Server is running on port: ${SERVER_PORT}`)
+  await connectToDatabase()
+})
