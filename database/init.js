@@ -1,4 +1,5 @@
-db = db.getSiblingDB('pohod_project');
+// Create db for Authentication Users
+db = db.getSiblingDB('auth_db');
 
 db.createCollection('users')
 db.users.insertOne(
