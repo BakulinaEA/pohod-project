@@ -26,9 +26,14 @@ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mong
 3. Создайте .env файл по примеру [.env.example](./.env.example)
 
 ```bash
+# Укажите что запускаетесь в режиме разработки
+NODE_ENV=development
+
+...
+
 # Вставьте физический адрес контейнера в котором запустилась база данных MongoDB
-DATABASE_HOST=127.0.0.1
-DATABASE_PORT=27017
+MONGO_HOST=127.0.0.1
+MONGO_PORT=27017
 
 ...
 
@@ -37,6 +42,7 @@ MONGO_INITDB_ROOT_USERNAME=admin
 MONGO_INITDB_ROOT_PASSWORD=password
 
 ...
+
 # Укажите порт на котором будет запущено приложение (по стандарту используется: 3000)
 SERVER_PORT=3000
 ```
