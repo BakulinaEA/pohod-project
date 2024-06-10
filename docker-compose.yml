@@ -18,13 +18,13 @@ services:
   
   database:
     image: database:1.0.0
-    container_name: ${DATABASE_HOST}
+    container_name: ${MONGO_HOST}
     build: 
       context: ./database
       dockerfile: Dockerfile
     env_file: .env
     ports:
-      - ${DATABASE_PORT}:${DATABASE_PORT}
+      - ${MONGO_PORT}:${MONGO_PORT}
     volumes:
       - database-v:/data/db
 
