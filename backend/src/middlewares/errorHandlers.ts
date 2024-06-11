@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { ErrorRequestHandler, Response } from 'express'
 import AppError from '../utils/AppError'
+import { REFRESH_PATH, clearAuthCookies } from '../utils/cookies'
 
 const handlerZodError = (res: Response, error: z.ZodError) => {
   const errors = error.issues.map((err) => ({
@@ -18,6 +19,10 @@ const handleAppError = (res: Response, error: AppError) => {
 
 export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   console.log(`PATH: ${req.path}`, error)
+
+  if (req.path === REFRESH_PATH) {
+    clearAuthCookies(res)
+  }
 
   if (error instanceof z.ZodError) {
     return handlerZodError(res, error)

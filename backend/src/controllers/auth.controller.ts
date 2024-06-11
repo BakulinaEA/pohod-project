@@ -1,8 +1,18 @@
 import catchErrors from '../utils/catchErrors'
-import { loginUser, createAccount } from '../services/auth.service'
+import {
+  loginUser,
+  createAccount,
+  refreshUserAccessToken
+} from '../services/auth.service'
 import { loginSchema, registerSchema } from './auth.schemas'
-import { clearAuthCookies, setAuthCookies } from '../utils/cookies'
+import {
+  clearAuthCookies,
+  getAccessTokenCookieOptions,
+  getRefreshTokenCookieOptions,
+  setAuthCookies
+} from '../utils/cookies'
 import { verifyToken } from '../utils/jwt'
+import appAssert from '../utils/appAssert'
 import SessionModel from '../models/session.model'
 
 export const registerHandler = catchErrors(async (req, res) => {
@@ -46,4 +56,19 @@ export const logoutHandler = catchErrors(async (req, res) => {
   return clearAuthCookies(res)
     .status(200)
     .json({ message: 'Вы вышли из аккаунта' })
+})
+
+export const refreshHandler = catchErrors(async (req, res) => {
+  const refreshToken = req.cookies.refreshToken as string | undefined
+  appAssert(refreshToken, 401, 'Missing refresh token')
+
+  const { accessToken, newRefreshToken } =
+    await refreshUserAccessToken(refreshToken)
+  if (newRefreshToken) {
+    res.cookie('refreshToken', newRefreshToken, getRefreshTokenCookieOptions())
+  }
+  return res
+    .status(200)
+    .cookie('accessToken', accessToken, getAccessTokenCookieOptions())
+    .json({ message: 'Access token refreshed' })
 })
