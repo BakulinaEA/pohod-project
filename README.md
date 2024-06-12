@@ -2,6 +2,10 @@
 
 Данный проект содержит [Frontend](./frontend/), [Backend](./backend/) и [образ](./database/) базы данных [mongoDB](https://hub.docker.com/layers/library/mongo/6.0.15/images/sha256-f06a25c6a55b98171b65672afbd6c96127d2b66c82c5357dc9275c483cf81ba7?context=explore) для приложения Pohod-Project.
 
+>Для разработки и деббагинга я настоятельно рекомендую использовать систему [Ubuntu 22.04 Desktop](https://ubuntu.com/desktop)
+
+>Для запуска в продаакшн [Ubuntu 22.04 Server](https://ubuntu.com/server)
+
 ## Установка 
 
 Для запуска приложения Вам потребуется установить на свою машину [Docker](https://www.docker.com/) 
@@ -73,6 +77,20 @@ yarn dev
 ```
 
 4. Откройте в браузере [http://localhost:5173/](http://localhost:5173/)
+
+### 5. Остановить контейнеры
+
+Нажмите сочетание клавиш Ctrl + C чтоб остановить контейнеры 
+
+#### Удалить контейнеры и их кэш:
+
+>Внимание: запуск этой команды удалит все ваши имеющиеся контейнеры
+
+1. Дайте права на запуск [./docker-down.sh](./docker-down.sh) файла
+```bash
+chmod +x ./docker-down.sh
+```
+2. Запустите [./docker-down.sh](./docker-down.sh)
 
 ### Задачи
 
