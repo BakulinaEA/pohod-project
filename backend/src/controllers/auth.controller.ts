@@ -2,9 +2,14 @@ import catchErrors from '../utils/catchErrors'
 import {
   loginUser,
   createAccount,
-  refreshUserAccessToken
+  refreshUserAccessToken,
+  verifyEmail
 } from '../services/auth.service'
-import { loginSchema, registerSchema } from './auth.schemas'
+import {
+  loginSchema,
+  registerSchema,
+  verificationCodeSchema
+} from './auth.schemas'
 import {
   clearAuthCookies,
   getAccessTokenCookieOptions,
@@ -60,7 +65,7 @@ export const logoutHandler = catchErrors(async (req, res) => {
 
 export const refreshHandler = catchErrors(async (req, res) => {
   const refreshToken = req.cookies.refreshToken as string | undefined
-  appAssert(refreshToken, 401, 'Missing refresh token')
+  appAssert(refreshToken, 401, 'Отсутствует Refresh Token')
 
   const { accessToken, newRefreshToken } =
     await refreshUserAccessToken(refreshToken)
@@ -70,5 +75,13 @@ export const refreshHandler = catchErrors(async (req, res) => {
   return res
     .status(200)
     .cookie('accessToken', accessToken, getAccessTokenCookieOptions())
-    .json({ message: 'Access token refreshed' })
+    .json({ message: 'Access Token обновлён' })
+})
+
+export const verifyEmailHandler = catchErrors(async (req, res) => {
+  const verificationCode = verificationCodeSchema.parse(req.params.code)
+
+  await verifyEmail(verificationCode)
+
+  return res.status(200).json({ message: 'Ваша почта подтверждена' })
 })

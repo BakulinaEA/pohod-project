@@ -25,32 +25,49 @@ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mong
 
 3. Создайте .env файл по примеру [.env.example](./.env.example)
 
-```bash
-# Укажите что запускаетесь в режиме разработки
-NODE_ENV=development
+   3.1 Укажите что запускаетесь в режиме разработки
 
-...
+   ```bash
+   NODE_ENV=development
+   ```
 
-# Вставьте физический адрес контейнера в котором запустилась база данных MongoDB
-MONGO_HOST=127.0.0.1
-MONGO_PORT=27017
+   3.2 Вставьте физический адрес контейнера в котором запустилась база данных MongoDB
 
-...
+   ```bash
+   MONGO_HOST=127.0.0.1
+   MONGO_PORT=27017
+   ```
 
-# Укажите логин и пароль к базе данных (по стандарту используется admin:password)
-MONGO_INITDB_ROOT_USERNAME=admin
-MONGO_INITDB_ROOT_PASSWORD=password
+   3.3 Укажите логин и пароль к базе данных (по стандарту используется admin:password)
 
-...
+   ```bash
+   MONGO_INITDB_ROOT_USERNAME=admin
+   MONGO_INITDB_ROOT_PASSWORD=password
+   ```
 
-# Укажите имя базы данных для работы приложения
-MONGO_DATABASE_NAME=pohod_project
+   3.4 Укажите имя базы данных для работы приложения
 
-...
+   ```bash
+   MONGO_DATABASE_NAME=pohod_project
+   ```
 
-# Укажите порт на котором будет запущено приложение (по стандарту используется: 3000)
-SERVER_PORT=3000
-```
+   3.5 Укажите API-ключ [resend.com](https://resend.com/) для отправки Email-уведомлений
+
+   ```bash
+   RESEND_API=KEY_HERE
+   ```
+
+   3.6 Укажите отправителя писем (Email)
+
+   ```bash
+   EMAIL_SENDER=l1za@resend.dev
+   ```
+
+   3.7 Укажите порт на котором будет запущено приложение (по стандарту используется: 3000)
+
+   ```bash
+   SERVER_PORT=3000
+   ```
 
 ### 2. Разработка и сборка приложения NodeJS
 

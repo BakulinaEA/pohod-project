@@ -16,12 +16,6 @@ export const NODE_ENV =
 export const SERVER_PORT =
   process.env.SERVER_PORT || getEnv('SERVER_PORT', '3000')
 
-// JWT SECRETS DATA
-export const JWT_SECRET =
-  process.env.JWT_SECRET || getEnv('JWT_SECRET', 'SOMESECRETS')
-export const JWT_REFRESH_SECRET =
-  process.env.JWT_REFRESH_SECRET || getEnv('JWT_REFRESH_SECRET', 'SOMESECRETS')
-
 // MONGO INIT
 const MONGO_USERNAME =
   process.env.MONGO_INITDB_ROOT_USERNAME ||
@@ -34,10 +28,26 @@ const MONGO_PORT = process.env.MONGO_PORT || getEnv('MONGO_PORT', '27017')
 const MONGO_DATABASE_NAME =
   process.env.MONGO_DATABASE_NAME || getEnv('MONGO_DATABASE_NAME', 'auth_db')
 
+// MONGO URL CONNECT LINE
 export const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE_NAME}?authSource=admin`
+
+// RESEND-API KEY
+export const EMAIL_SENDER =
+  process.env.EMAIL_SENDER || getEnv('EMAIL_SENDER', 'l1za@resend.dev')
+export const RESEND_API =
+  process.env.RESEND_API || getEnv('RESEND_API', 'KEY_HERE')
+
+// JWT SECRETS DATA
+export const JWT_SECRET =
+  process.env.JWT_SECRET || getEnv('JWT_SECRET', 'JWT_SECRET')
+export const JWT_REFRESH_SECRET =
+  process.env.JWT_REFRESH_SECRET || getEnv('JWT_REFRESH_SECRET', 'SOMESECRETS')
 
 // FRONTEND INIT
 export const FRONTEND_HOST =
   process.env.FRONTEND_HOST || getEnv('FRONTEND_HOST', 'localhost')
 export const FRONTEND_PORT =
   process.env.FRONTEND_PORT || getEnv('FRONTEND_PORT', '5173')
+
+// APP URL
+export const APP_ORIGIN = `http://${FRONTEND_HOST}:${FRONTEND_PORT}`

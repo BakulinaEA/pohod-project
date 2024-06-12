@@ -5,8 +5,13 @@ import VerificationCodeModel from '../models/verificationCode.model'
 import SessionModel from '../models/session.model'
 
 import { ONE_DAY_MS, oneHourFromNow, oneWeekFromNow } from '../utils/date'
-import { JWT_SECRET, JWT_REFRESH_SECRET } from '../constants/env'
-import { CONFLICT, UNAUTHORIZED } from '../constants/http'
+import { JWT_SECRET, JWT_REFRESH_SECRET, APP_ORIGIN } from '../constants/env'
+import {
+  CONFLICT,
+  UNAUTHORIZED,
+  NOT_FOUND,
+  INTERNAL_SERVER_ERROR
+} from '../constants/http'
 
 import appAssert from '../utils/appAssert'
 import {
@@ -15,6 +20,8 @@ import {
   signToken,
   verifyToken
 } from '../utils/jwt'
+import { sendMail } from '../utils/sendMail'
+import { getVerifyEmailTemplate } from '../utils/emailTemplates'
 
 export type CreateAccountParams = {
   email: string
@@ -49,6 +56,15 @@ export const createAccount = async (data: CreateAccountParams) => {
   })
 
   // here is send email
+  const url = `${APP_ORIGIN}/email/verify/${verificationCode._id}`
+
+  // send verification email
+  const { error } = await sendMail({
+    to: user.email,
+    ...getVerifyEmailTemplate(url)
+  })
+  // ignore email errors for now
+  if (error) console.error(error)
 
   // create session
   const session = await SessionModel.create({
@@ -116,6 +132,34 @@ export const loginUser = async ({
 }
 
 // email actions there
+
+export const verifyEmail = async (code: string) => {
+  const validCode = await VerificationCodeModel.findOne({
+    _id: code,
+    type: VerificationCodeType.EmailVerification,
+    expiresAt: { $gt: new Date() }
+  })
+  appAssert(validCode, NOT_FOUND, 'Ссылка для подтверждения почты истекла')
+
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    validCode.userID,
+    {
+      verified: true
+    },
+    { new: true }
+  )
+  appAssert(
+    updatedUser,
+    INTERNAL_SERVER_ERROR,
+    'Невозможно подтвердить почту, попробуйте ещё раз'
+  )
+
+  await validCode.deleteOne()
+
+  return {
+    user: updatedUser.omitPassword()
+  }
+}
 
 export const refreshUserAccessToken = async (refreshToken: string) => {
   const { payload } = verifyToken<RefreshTokenPayload>(refreshToken, {
