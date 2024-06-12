@@ -43,6 +43,11 @@ MONGO_INITDB_ROOT_PASSWORD=password
 
 ...
 
+# Укажите имя базы данных для работы приложения
+MONGO_DATABASE_NAME=pohod_project
+
+...
+
 # Укажите порт на котором будет запущено приложение (по стандарту используется: 3000)
 SERVER_PORT=3000
 ```
