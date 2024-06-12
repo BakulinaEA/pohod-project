@@ -31,8 +31,10 @@ const MONGO_PASSWORD =
   getEnv('MONGO_INITDB_ROOT_PASSWORD', 'password')
 const MONGO_HOST = process.env.MONGO_HOST || getEnv('MONGO_HOST', 'localhost')
 const MONGO_PORT = process.env.MONGO_PORT || getEnv('MONGO_PORT', '27017')
+const MONGO_DATABASE_NAME =
+  process.env.MONGO_DATABASE_NAME || getEnv('MONGO_DATABASE_NAME', 'auth_db')
 
-export const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}`
+export const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE_NAME}?authSource=admin`
 
 // FRONTEND INIT
 export const FRONTEND_HOST =
