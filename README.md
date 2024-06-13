@@ -4,7 +4,7 @@
 
 >Для разработки и деббагинга я настоятельно рекомендую использовать систему [Ubuntu 22.04 Desktop](https://ubuntu.com/desktop)
 
->Для запуска в продаакшн [Ubuntu 22.04 Server](https://ubuntu.com/server)
+>Для запуска в продакшн [Ubuntu 22.04 Server](https://ubuntu.com/server)
 
 ## Установка 
 
@@ -12,45 +12,45 @@
 
 ### 1. Создайте .env файл
 
-Создайте в корне проекта файл .env по примеру [.env.example](./.env.example)
+1. Создайте в корне проекта файл .env по примеру [.env.example](./.env.example)
 
-1.1 Укажите что запускаетесь в режиме разработки
-```bash
-NODE_ENV=development
-```
+    1.1 Укажите что запускаетесь в режиме разработки
+    ```bash
+    NODE_ENV=development
+    ```
 
-1.2 Вставьте физический адрес контейнера в котором запустилась база данных MongoDB
-```bash
-MONGO_HOST=127.0.0.1
-MONGO_PORT=27017
-```
+    1.2 Вставьте физический адрес контейнера в котором запустилась база данных MongoDB
+    ```bash
+    MONGO_HOST=127.0.0.1
+    MONGO_PORT=27017
+    ```
 
-1.3 Укажите логин и пароль к базе данных (по стандарту используется admin:password)
-```bash
-MONGO_INITDB_ROOT_USERNAME=admin
-MONGO_INITDB_ROOT_PASSWORD=password
-```
+    1.3 Укажите логин и пароль к базе данных (по стандарту используется admin:password)
+    ```bash
+    MONGO_INITDB_ROOT_USERNAME=admin
+    MONGO_INITDB_ROOT_PASSWORD=password
+    ```
 
-1.4 Укажите имя базы данных для работы приложения
-```bash
-MONGO_DATABASE_NAME=pohod_project
-```
+    1.4 Укажите имя базы данных для работы приложения
+    ```bash
+    MONGO_DATABASE_NAME=pohod_project
+    ```
 
-1.5 Укажите API-ключ [resend.com](https://resend.com/) для отправки Email-уведомлений
+    1.5 Укажите API-ключ [resend.com](https://resend.com/) для отправки Email-уведомлений
 
-```bash
-RESEND_API=KEY_HERE
-```
+    ```bash
+    RESEND_API=KEY_HERE
+    ```
 
-1.6 Укажите отправителя писем (Email)
-```bash
-EMAIL_SENDER=l1za@resend.dev
-```
+    1.6 Укажите отправителя писем (Email)
+    ```bash
+    EMAIL_SENDER=l1za@resend.dev
+    ```
 
-1.7 Укажите порт на котором будет запущено приложение (по стандарту используется: 3000)
-```bash
-SERVER_PORT=3000
-```
+    1.7 Укажите порт на котором будет запущено приложение (по стандарту используется: 3000)
+    ```bash
+    SERVER_PORT=3000
+    ```
 
 ### 2. Запустите контейнеры
 
@@ -65,9 +65,10 @@ docker compose --env-file .env up
 1. Откройте в любом браузере [http://localhost:3000/](http://localhost:3000/)
 
 2. Ответ должен быть таким:
-```json
-{"status":"online"}
-```
+
+    ```json
+    {"status":"online"}
+    ```
 Если вы увидели статус онлайн, то все работает отлично
 
 ### 4. Frontend запуск
@@ -75,17 +76,20 @@ docker compose --env-file .env up
 В данный момент этот функционал недоступен для совместной работы с Backend частью, однако вы всегда сможете перейти в эту часть кода и посмотреть как всё будет выглядеть через некоторое время.
 
 1. Перейдём в папку Frontend части
-```bash
-cd frontend/
-```
+
+    ```bash
+    cd frontend/
+    ```
 2. Установим зависимости
-```bash
-yarn
-```
+
+    ```bash
+    yarn
+    ```
 3. Запустим
-```bash
-yarn dev
-```
+
+    ```bash
+    yarn dev
+    ```
 
 4. Откройте в браузере [http://localhost:5173/](http://localhost:5173/)
 
@@ -98,10 +102,17 @@ yarn dev
 >Внимание: запуск этой команды удалит все ваши имеющиеся контейнеры
 
 1. Дайте права на запуск [./docker-down.sh](./docker-down.sh) файла
-```bash
-chmod +x ./docker-down.sh
-```
+
+    ```bash
+    chmod +x ./docker-down.sh
+    ```
+
 2. Запустите [./docker-down.sh](./docker-down.sh)
+
+    ```bash
+    ./docker-down.sh
+    ```
+
 
 ### Задачи
 
