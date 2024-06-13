@@ -10,7 +10,7 @@ import {
   oneHourFromNow,
   oneWeekFromNow
 } from '../utils/date'
-import { JWT_SECRET, JWT_REFRESH_SECRET, APP_ORIGIN } from '../constants/env'
+import { APP_ORIGIN } from '../constants/env'
 import {
   CONFLICT,
   UNAUTHORIZED,
@@ -174,14 +174,14 @@ export const refreshUserAccessToken = async (refreshToken: string) => {
   const { payload } = verifyToken<RefreshTokenPayload>(refreshToken, {
     secret: refreshTokenSignOptions.secret
   })
-  appAssert(payload, UNAUTHORIZED, 'Invalid refresh token')
+  appAssert(payload, UNAUTHORIZED, 'Неверный Refresh Token')
 
   const session = await SessionModel.findById(payload.sessionID)
   const now = Date.now()
   appAssert(
     session && session.expiresAt.getTime() > now,
     UNAUTHORIZED,
-    'Session expired'
+    'Сессия истекла'
   )
 
   // refresh the session if it expires in the next 24hrs

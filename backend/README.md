@@ -48,7 +48,7 @@ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mong
    3.4 Укажите имя базы данных для работы приложения
 
    ```bash
-   MONGO_DATABASE_NAME=pohod_project
+   MONGO_DATABASE_NAME=auth_db
    ```
 
    3.5 Укажите API-ключ [resend.com](https://resend.com/) для отправки Email-уведомлений

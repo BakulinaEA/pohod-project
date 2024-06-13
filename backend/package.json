@@ -2,11 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "backend for Pohod-Project",
-  "main": "src/server.ts",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/server.ts",
-    "build": "rm -rf dist && prettier --write src/ && tsc --build",
-    "start": "node ./dist/server.js"
+    "dev": "nodemon ./src/index.ts",
+    "build": "rm -rf dist && prettier --write src/ && tsc --build && cp ./package.json ./dist",
+    "start": "node ./dist/index.js"
   },
   "author": "Elizaveta Bakulina",
   "license": "MIT",
@@ -16,7 +16,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1",
     "resend": "^3.3.0",
