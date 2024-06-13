@@ -3,11 +3,15 @@ import {
   loginUser,
   createAccount,
   refreshUserAccessToken,
-  verifyEmail
+  verifyEmail,
+  sendPasswordResetEmail,
+  resetPassword
 } from '../services/auth.service'
 import {
+  emailSchema,
   loginSchema,
   registerSchema,
+  resetPasswordSchema,
   verificationCodeSchema
 } from './auth.schemas'
 import {
@@ -84,4 +88,24 @@ export const verifyEmailHandler = catchErrors(async (req, res) => {
   await verifyEmail(verificationCode)
 
   return res.status(200).json({ message: 'Ваша почта подтверждена' })
+})
+
+export const sendPasswordResetHandler = catchErrors(async (req, res) => {
+  const email = emailSchema.parse(req.body.email)
+
+  await sendPasswordResetEmail(email)
+
+  return res.status(200).json({
+    message: 'Ссылка для восстановления пароля была отправлена на вашу почту'
+  })
+})
+
+export const resetPasswordHandler = catchErrors(async (req, res) => {
+  const request = resetPasswordSchema.parse(req.body)
+
+  await resetPassword(request)
+
+  return clearAuthCookies(res)
+    .status(200)
+    .json({ message: 'Пароль был успешно изменён' })
 })

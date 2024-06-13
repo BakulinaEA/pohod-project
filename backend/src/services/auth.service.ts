@@ -4,7 +4,12 @@ import VerificationCodeType from '../constants/verificationCodeTypes'
 import VerificationCodeModel from '../models/verificationCode.model'
 import SessionModel from '../models/session.model'
 
-import { ONE_DAY_MS, oneHourFromNow, oneWeekFromNow } from '../utils/date'
+import {
+  ONE_DAY_MS,
+  fiveMinutesAgo,
+  oneHourFromNow,
+  oneWeekFromNow
+} from '../utils/date'
 import { JWT_SECRET, JWT_REFRESH_SECRET, APP_ORIGIN } from '../constants/env'
 import {
   CONFLICT,
@@ -21,7 +26,11 @@ import {
   verifyToken
 } from '../utils/jwt'
 import { sendMail } from '../utils/sendMail'
-import { getVerifyEmailTemplate } from '../utils/emailTemplates'
+import {
+  getPasswordResetTemplate,
+  getVerifyEmailTemplate
+} from '../utils/emailTemplates'
+import { hashValue } from '../utils/bcrypt'
 
 export type CreateAccountParams = {
   email: string
@@ -200,4 +209,82 @@ export const refreshUserAccessToken = async (refreshToken: string) => {
     accessToken,
     newRefreshToken
   }
+}
+
+export const sendPasswordResetEmail = async (email: string) => {
+  try {
+    const user = await UserModel.findOne({ email })
+    appAssert(user, NOT_FOUND, 'Пользователь не найден')
+
+    // check for max password reset requests (2 emails in 5min)
+    const fiveMinAgo = fiveMinutesAgo()
+    const count = await VerificationCodeModel.countDocuments({
+      userID: user._id,
+      type: VerificationCodeType.PasswordReset,
+      createdAt: { $gt: fiveMinAgo }
+    })
+    appAssert(count <= 1, 429, 'Слишком много запросов, повторите позже')
+
+    const expiresAt = oneHourFromNow()
+    const verificationCode = await VerificationCodeModel.create({
+      userID: user._id,
+      type: VerificationCodeType.PasswordReset,
+      expiresAt
+    })
+
+    const url = `${APP_ORIGIN}/password/reset?code=${
+      verificationCode._id
+    }&exp=${expiresAt.getTime()}`
+
+    const { data, error } = await sendMail({
+      to: email,
+      ...getPasswordResetTemplate(url)
+    })
+
+    appAssert(
+      data?.id,
+      INTERNAL_SERVER_ERROR,
+      `${error?.name} - ${error?.message}`
+    )
+    return {
+      url,
+      emailId: data.id
+    }
+  } catch (error: any) {
+    console.log('SendPasswordResetError:', error.message)
+    return {}
+  }
+}
+
+type ResetPasswordParams = {
+  password: string
+  verificationCode: string
+}
+
+export const resetPassword = async ({
+  verificationCode,
+  password
+}: ResetPasswordParams) => {
+  const validCode = await VerificationCodeModel.findOne({
+    _id: verificationCode,
+    type: VerificationCodeType.PasswordReset,
+    expiresAt: { $gt: new Date() }
+  })
+  appAssert(validCode, NOT_FOUND, 'Неверный код для восстановления аккаунта')
+
+  const updatedUser = await UserModel.findByIdAndUpdate(validCode.userID, {
+    password: await hashValue(password)
+  })
+  appAssert(
+    updatedUser,
+    INTERNAL_SERVER_ERROR,
+    'Мы не смогли восстановить пароль, попробуйте позже...'
+  )
+
+  await validCode.deleteOne()
+
+  // delete all sessions
+  await SessionModel.deleteMany({ userID: validCode.userID })
+
+  return { user: updatedUser.omitPassword() }
 }
