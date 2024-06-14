@@ -45,11 +45,12 @@ const Login = () => {
   const {
     mutate: signIn,
     isPending,
-    isError
+    isError,
+    error
   } = useMutation({
     mutationFn: login,
     onSuccess: () => {
-      navigate('/dashboard', {
+      navigate('/', {
         replace: true
       })
     }
@@ -113,16 +114,16 @@ const Login = () => {
                     >
                       <Label>Забыли пароль?</Label>
                     </Link>
-                    {isError && (
-                      <Alert variant="destructive">
-                        <AlertDescription className="text-sm">
-                          Неправильная почта или пароль...
-                        </AlertDescription>
-                      </Alert>
-                    )}
                   </FormItem>
                 )}
               />
+              {isError && (
+                <Alert variant="destructive">
+                  <AlertDescription className="text-sm">
+                    {error?.message || 'Что-то пошло не так...'}
+                  </AlertDescription>
+                </Alert>
+              )}
               <Button className="mt-1.5" type="submit">
                 {isPending ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -135,7 +136,7 @@ const Login = () => {
         </CardContent>
         <CardFooter className="text-center flex flex-col">
           <Link
-            to="/resetpassword"
+            to="/register"
             className="mt-3.5 mb-2 text-sm text-blue-500 hover:underline"
           >
             Создать аккаунт

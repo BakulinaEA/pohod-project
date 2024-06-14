@@ -33,6 +33,7 @@ import {
 import { hashValue } from '../utils/bcrypt'
 
 export type CreateAccountParams = {
+  username: string
   email: string
   password: string
   userAgent?: string
@@ -51,6 +52,7 @@ export const createAccount = async (data: CreateAccountParams) => {
 
   // create user
   const user = await UserModel.create({
+    username: data.username,
     email: data.email,
     password: data.password
   })
