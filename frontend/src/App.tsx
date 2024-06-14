@@ -1,10 +1,10 @@
-import { BrowserRouter } from 'react-router-dom'
-import Router from './routes'
+import { Route, Routes } from 'react-router-dom'
+import Login from '@/pages/Login'
 
 const App = () => (
-  <BrowserRouter>
-    <Router />
-  </BrowserRouter>
+  <Routes>
+    <Route path="/" element={<Login />}></Route>
+  </Routes>
 )
 
 export default App
