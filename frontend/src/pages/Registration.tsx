@@ -167,7 +167,7 @@ const Register = () => {
               )}
               <Button className="mt-1.5" type="submit">
                 {isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   'Создать аккаунт'
                 )}
