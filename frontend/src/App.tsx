@@ -11,6 +11,8 @@ const App = () => (
     <Route path="/register" element={<Registration />}></Route>
     <Route path="/email/verify/:code" element={<VerifyEmail />}></Route>
     <Route path="/dashboard" element={<Dashboard />}></Route>
+    {/* <Route path="/dashboard" element={<Dashboard />}></Route> */}
+    {/* <Route path="/dashboard" element={<Dashboard />}></Route> */}
   </Routes>
 )
 
