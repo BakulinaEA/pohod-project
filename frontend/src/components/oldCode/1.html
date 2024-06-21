@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поход</title>
+    <link rel="stylesheet" type="text/css" href="3.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <h1>Организация похода</h1>
+    <form id="mainForm">
+        <div class="form-control">
+            <label for="participants">Количество участников:</label>
+            <input type="number" id="participants" name="participants" min="1" required>
+        </div>
+        <!-- <div class="form-control">
+            <label for="duration">Продолжительность похода (дней):</label>
+            <input type="number" id="duration" name="duration" min="1" required>
+        </div> -->
+        <div class="form-control">
+            <label for="activity">Вид похода:</label>
+            <select id="activity" required>
+                <option value="hiking">Пеший</option>
+                <option value="water">Водный</option>
+            </select>
+        </div>
+        <button type="submit">Продолжить</button>
+        <script>
+            $(document).ready(function () {
+                
+                $('#mainForm').submit(function (e) {
+                    e.preventDefault();
+                    
+                    const participants = $('#participants').val();
+                    //const duration = $('#duration').val();
+                    if (participants) {
+                    //&& duration) {
+                        window.location.href = `4.html?participants=${participants}`;
+                        // &duration=${duration}`;
+                    }
+
+                });
+                //localStorage.setItem('duration', JSON.stringify(duration)); /*Заносим значение поля в хранилище*/
+            });
+        </script>
+</body>
+
+</html>

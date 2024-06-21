@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опрос участников</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="3.css">
+</head>
+
+<body>
+    <h1>Опрос участников</h1>
+    <form id="surveyForm">
+
+    </form>
+    <script>
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const participants = urlParams.get('participants');
+            //var duration = JSON.parse(localStorage.getItem('duration'));
+            const duration = urlParams.get('duration');
+
+            $('#participants').text(participants);
+            $('#duration').text(duration);
+
+            for (let i = 1; i <= participants; i++) {
+                // Цикл, который добавляет в форму
+                $('#surveyForm').append(` 
+            <h3>Участник ${i}</h3>
+                <div class="form-control2">
+                    <label> Имя участника: </label>
+                        <input type="text" id="participantName${i}" required>
+                </div>
+                <div class="form-control2">
+                    <label>Возраст:</label>
+                        <input type="number" id="participantAge${i}" min="8" required>
+                </div>
+                <div class="form-control2">
+                    <label>Вес:</label>
+                        <input type="number" id="participantWeight${i}" min="20" required>
+                </div>
+                <div class="form-control2">
+                    <label>Пол:</label>
+                        <input type="radio" name="sex${i}" value="male" checked> М
+                        <input type="radio" name="sex${i}" value="female"> Ж
+                </div>
+                <div class="form-control2">
+                    <label for="feature-${i}">Особенности участника:</label>
+                    <select id="activity" required>
+                        <option value="notExist">Нет особенностей</option>
+                        <option value="lactose">Аллергия на лактозу</option>
+                        <option value="nuts">Аллергия на орехи</option>
+                        <option value="sweets" >Аллергия на сладкое</option>
+                        <option value="vegetarian" >Вегетарианец</option>
+                    </select>
+                </div>
+        `);
+            }
+            $('#surveyForm').append(`
+    <button type="submit">Составить план питания</button>
+    `);
+        });
+
+        document.getElementById('surveyForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            // Обработка отправки формы
+            window.location.href = '5.html?participants=${participants}&duration=${duration}';
+        });
+
+    </script>
+</body>
+
+</html>

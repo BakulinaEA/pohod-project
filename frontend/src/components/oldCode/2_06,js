@@ -1,0 +1,98 @@
+
+
+const glpk = require('glpk.js');
+
+function calculateNutrition(numParticipants, weightPerParticipant) {
+    const baseCaloriesPerKg = 30;
+    const activityMultiplier = 1.6;
+    const caloriesPerPerson = baseCaloriesPerKg * weightPerParticipant * activityMultiplier;
+    const totalCaloriesNeeded = caloriesPerPerson * numParticipants;
+
+    const proteinRatio = 0.2;
+    const fatRatio = 0.3;
+    const carbRatio = 0.5;
+    const proteinPerGramCal = 4;
+    const fatPerGramCal = 9;
+    const carbPerGramCal = 4;
+
+    const proteinNeeded = totalCaloriesNeeded * proteinRatio / proteinPerGramCal;
+    const fatNeeded = totalCaloriesNeeded * fatRatio / fatPerGramCal;
+    const carbNeeded = totalCaloriesNeeded * carbRatio / carbPerGramCal;
+
+    return {
+        totalCaloriesNeeded,
+        proteinNeeded,
+        fatNeeded,
+        carbNeeded
+    };
+}
+
+function solveMealPlan(numParticipants, weightPerParticipant) {
+    const nutrition = calculateNutrition(numParticipants, weightPerParticipant);
+
+    const weights = [100, 150, 200, 100, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
+    const calories = [200, 250, 300, 180, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
+    const proteins = [10, 12, 14, 8, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    const fats = [5, 7, 9, 4, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const carbs = [30, 35, 40, 20, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
+
+    const maxProductPerPerson = 200;
+    const maxTotalProduct = maxProductPerPerson * numParticipants;
+
+    const lp = {
+        name: 'Meal Plan Optimization',
+        objective: {
+            direction: glpk.GLP_MIN,
+            name: 'weight',
+            vars: weights.map((w, i) => ({ name: `x${i + 1}`, coef: w }))
+        },
+        subjectTo: [
+            {
+                name: 'calories',
+                vars: calories.map((c, i) => ({ name: `x${i + 1}`, coef: c })),
+                bnds: { type: glpk.GLP_LO, val: nutrition.totalCaloriesNeeded }
+            },
+            {
+                name: 'proteins',
+                vars: proteins.map((p, i) => ({ name: `x${i + 1}`, coef: p })),
+                bnds: { type: glpk.GLP_LO, val: nutrition.proteinNeeded }
+            },
+            {
+                name: 'fats',
+                vars: fats.map((f, i) => ({ name: `x${i + 1}`, coef: f })),
+                bnds: { type: glpk.GLP_LO, val: nutrition.fatNeeded }
+            },
+            {
+                name: 'carbs',
+                vars: carbs.map((c, i) => ({ name: `x${i + 1}`, coef: c })),
+                bnds: { type: glpk.GLP_LO, val: nutrition.carbNeeded }
+            },
+            ...weights.map((_, i) => ({
+                name: `max_product_${i + 1}`,
+                vars: [{ name: `x${i + 1}`, coef: 1 }],
+                bnds: { type: glpk.GLP_UP, val: maxTotalProduct }
+            }))
+        ],
+        bounds: weights.map((_, i) => ({
+            name: `x${i + 1}`,
+            bnds: { type: glpk.GLP_LO, val: 0 }
+        }))
+    };
+
+    const result = glpk.solve(lp, glpk.GLP_MSG_ALL);
+
+    if (result.result.status === glpk.GLP_OPT) {
+        console.log("Оптимальное распределение продуктов (в граммах):");
+        result.result.vars.forEach((value, key) => {
+            console.log(`${key}: ${value.toFixed(2)} г`);
+        });
+        console.log(`Минимальный вес продуктов: ${result.result.z.toFixed(2)} г`);
+    } else {
+        console.log("Задача не имеет решения");
+    }
+}
+
+const numParticipants = 5;
+const weightPerParticipant = 70;
+
+solveMealPlan(numParticipants, weightPerParticipant);

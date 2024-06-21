@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>План питания</title>
+    <style>
+        table {
+            max-width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="3.css"> -->
+</head>
+
+<body onload="createMealPlanTable();">
+    <h1>Введите походное количество дней</h1>
+    <!-- <script src="2.js">
+    </script> -->
+    <input type="number" id="duration" min="1" placeholder="Количество дней">
+    <button onclick="createMealPlanTable()">Создать план питания</button>
+    <h2>План питания на поход</h2>
+    <table id="TableP">
+        <!-- <tr>
+            <th></th>
+            <th>День 1</th>
+            <th>День 2</th>
+            <th>День 3</th>
+        </tr>
+        <tr>
+            <th>Завтрак</th>
+            <td>Овсянка</td>
+            <td>Рис с молоком</td>
+            <td>Мюсли с джемом</td>
+        </tr>
+        <tr>
+            <th>Обед</th>
+            <td>Перекус из колбасы, хлеба и сыра</td>
+            <td>Суп со звездочками и тушенкой</td>
+            <td>Перекус из колбасы, хлеба и сыра</td>
+        </tr>
+        <tr>
+            <th>Ужин</th>
+            <td>Кускус с куриной тушенкой</td>
+            <td>Гречка с говяжьей тушенкой</td>
+            <td>Макароны со свиной тушенкой</td>
+        </tr> -->
+    </table>
+    <script>
+
+        function createMealPlanTable() {
+            // Получаем количество дней из поля ввода
+            //var duration = JSON.parse(localStorage.getItem('duration')); /*Получаем значение поля из хранилища*/
+            
+
+            const duration = document.getElementById('duration').value;
+            const table = document.getElementById('TableP');
+            table.innerHTML = ''; // Очищаем таблицу перед созданием новой
+
+            // Заголовки столбцов
+            const headerRow = table.insertRow();
+            for (let day = 0; day <= duration; day++) {
+                const cell = document.createElement('th');
+                cell.textContent = `День ${day}`;
+                headerRow.appendChild(cell);
+            }
+            // Строки с продуктами
+            const meals = ['Завтрак', 'Обед', 'Ужин'];
+            meals.forEach(meal => {
+                const row = table.insertRow();
+                const cell = document.createElement('td');
+                cell.textContent = meal;
+                row.appendChild(cell);
+                for (let day = 1; day <= duration; day++) {
+                    const cell = document.createElement('td');
+                    cell.textContent = getRandomProduct(); // Заполняем случайным продуктом
+                    row.appendChild(cell);
+                }
+            });
+        }
+        function getRandomProduct() {
+            const products = ['Рис с тушенкой', 'Сублимат', 'Гречка с говяжьей тушенкой', 'Колбаса, сыр, хлеб',
+                'Кускус с тушенкой', 'Мюсли с сухим молоком', 'Рис с молоком', 'Овсянка с молоком', 'Суп со звездочками', 'Макароны', 'Тушеные овощи', 'Чай, сахар', 'Конфеты'];
+            return products[Math.floor(Math.random() * products.length)];
+        }
+
+    </script>
+    <p></p>
+    <button onclick="packBackpack()">Собрать рюкзак</button>
+    <script>
+        function packBackpack() {
+            event.preventDefault();
+            // Обработка отправки формы
+            window.location.href = '6.html';
+            window.history.pushState({ pageData }, '', newUrl);
+
+            return backpack;
+        }
+
+    </script>
+    
+</body>
+
+</html>

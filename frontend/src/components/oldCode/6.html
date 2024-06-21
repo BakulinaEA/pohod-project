@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Список продуктов</title>
+</head>
+<style>
+  .markers {
+    margin: 0 0 20px 24px;
+    padding: 0;
+    list-style-type: "▢ ";
+  }
+
+  .markers li {
+    margin: 7px 0;
+    font-size: 14px;
+  }
+</style>
+
+<body>
+  <h1>Список продуктов</h1>
+  <ul class="markers">
+    <li>Сублимат</li>
+    <li>Рис</li>
+    <li>Макароны</li>
+    <li>Тушенка</li>
+  </ul>
+  <button onclick="back()">Вернуться</button>
+  <script>
+    function back() {
+      event.preventDefault();
+      window.addEventListener('popstate', function (event) {
+        if (event.state && event.state.pageData) {
+          // Восстановление данных на странице
+          updatePageWithData(event.state.pageData);
+        }
+      });
+
+      // Обработка отправки формы
+      window.location.href = '5.html';
+     
+      return back;
+    }
+
+  </script>
+  <script>
+    // Список людей и их предпочтения
+    const people = [
+      { name: 'Иван', diet: 'вегетарианец', needs: ['крупы', 'овощи', 'фрукты'] },
+      { name: 'Мария', diet: 'без ограничений', needs: ['мясо', 'крупы', 'овощи', 'фрукты', 'молочные продукты'] },
+      { name: 'Петр', diet: 'без ограничений', needs: ['мясо', 'крупы', 'овощи'] },
+      { name: 'Анна', diet: 'веган', needs: ['крупы', 'овощи', 'фрукты', 'орехи'] }
+    ];
+
+    // Список доступных продуктов
+    const products = ['мясо', 'крупы', 'овощи', 'фрукты', 'молочные продукты', 'орехи'];
+
+    // Функция для составления плана питания
+    function createMealPlan() {
+      const mealPlan = [];
+
+      for (const person of people) {
+        const personalPlan = [];
+        for (const need of person.needs) {
+          if (products.includes(need)) {
+            personalPlan.push(need);
+          }
+        }
+        mealPlan.push({ name: person.name, diet: person.diet, plan: personalPlan });
+      }
+
+      return mealPlan;
+    }
+
+    // Функция для сбора рюкзака
+    function packBackpack() {
+      const backpack = {};
+
+      for (const person of people) {
+        for (const item of person.needs) {
+          if (!backpack[item]) {
+            backpack[item] = 0;
+          }
+          backpack[item] += 1;
+        }
+      }
+
+      return backpack;
+    }
+
+    // Вывод результатов
+    console.log('План питания:');
+    const mealPlan = createMealPlan();
+    for (const person of mealPlan) {
+      console.log(`${person.name} (${person.diet}): ${person.plan.join(', ')}`);
+    }
+
+    console.log('\nРюкзак:');
+    const backpack = packBackpack();
+    for (const item in backpack) {
+      console.log(`${item}: ${backpack[item]}`);
+    }
+  </script>
+</body>
+
+</html>
